@@ -1,0 +1,380 @@
+# Security Code Review Agent - Project .gitignore
+
+# ============ Python Backend ============
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# ============ Frontend (Next.js) ============
+# Dependencies
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/versions
+
+# Testing
+frontend/coverage/
+
+# Next.js
+frontend/.next/
+frontend/out/
+
+# Production
+frontend/build/
+
+# Debug
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# Vercel
+frontend/.vercel
+
+# TypeScript
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# ============ Database ============
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+scanner.db
+
+# Database migrations (if we add them later)
+**/migrations/versions/
+
+# ============ Environment & Config ============
+# Environment variables - all common patterns
+.env
+.env.*
+.env-*
+.env_*
+.environment
+.environment.*
+
+# Framework-specific environment files
+.env.local
+.env.development
+.env.development.local
+.env.dev
+.env.dev.local
+.env.test
+.env.test.local
+.env.testing
+.env.staging
+.env.stage
+.env.production
+.env.production.local
+.env.prod
+.env.prod.local
+
+# Docker environment files
+.env.docker
+.env.compose
+docker.env
+docker-compose.env
+.dockerenv
+
+# CI/CD environment files
+.env.ci
+.env.build
+.env.deploy
+.env.github
+.env.gitlab
+.env.jenkins
+.env.actions
+
+# Cloud platform environment files
+.env.aws
+.env.azure
+.env.gcp
+.env.heroku
+.env.vercel
+.env.netlify
+.env.railway
+
+# Language/Framework specific
+# Python
+.python-env
+.pyvenv
+python.env
+
+# Node.js
+.nvmrc.local
+.node-version.local
+
+# Ruby
+.ruby-env
+.rbenv-vars
+
+# PHP
+.env.php
+.env.laravel
+.env.symfony
+
+# Java
+.env.properties
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# Database environment files
+.env.db
+.env.database
+.env.mysql
+.env.postgres
+.env.mongodb
+.env.redis
+
+# Service-specific environment files
+.env.api
+.env.frontend
+.env.backend
+.env.web
+.env.server
+.env.client
+.env.worker
+.env.queue
+
+# Load balancer & reverse proxy
+.env.nginx
+.env.apache
+.env.traefik
+
+# Monitoring & logging
+.env.monitoring
+.env.logging
+.env.sentry
+.env.datadog
+
+# Keep example files
+!.env.example
+!.env.sample
+!.env.template
+!.env.dist
+!.env.default
+!.env.example.*
+!.env.sample.*
+!.env.template.*
+
+# Specific frontend environment files
+frontend/.env*
+frontend/.environment*
+frontend/.env-*
+frontend/.env_*
+!frontend/.env.example
+!frontend/.env.sample
+
+# ============ IDE & Editor ============
+# VSCode
+.vscode/
+!.vscode/settings.json.example
+!.vscode/extensions.json
+
+# PyCharm
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ============ System Files ============
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+
+# ============ Logs ============
+# Application logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# ============ Security & Secrets ============
+# API keys and secrets (extra protection)
+**/secrets/
+**/*secret*
+**/*key*
+**/*token*
+!**/public_key*
+
+# Certificate files
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# ============ Temporary & Cache Files ============
+# OS generated files
+.DS_Store?
+.Spotlight-V100
+.Trashes
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Cache directories
+.cache/
+*.cache
+
+# ============ Project Specific ============
+# Scan results (if we want to exclude them from version control)
+/scan_results/
+/reports/
+
+# Test data
+/test_data/
+/testcases/
+
+# Documentation build
+docs/_build/
+
+# Backup files
+*.bak
+*.backup
