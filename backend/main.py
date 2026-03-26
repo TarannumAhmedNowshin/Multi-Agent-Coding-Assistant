@@ -5,9 +5,11 @@ from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.api.dependencies import _cache_service
-from backend.api.routes import health
+from backend.api.middleware import register_middleware
+from backend.api.routes import health, index, search, tasks, ws
 from backend.utils.logger import setup_logging
 
 logger = logging.getLogger(__name__)
@@ -39,5 +41,21 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ── CORS ──
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ── Middleware (request ID, error handling) ──
+register_middleware(app)
+
 # ── Routes ──
 app.include_router(health.router)
+app.include_router(tasks.router)
+app.include_router(index.router)
+app.include_router(search.router)
+app.include_router(ws.router)

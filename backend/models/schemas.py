@@ -37,6 +37,12 @@ class CodeArtifactResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class StepDetail(StepResponse):
+    """Step with nested code artifacts."""
+
+    code_artifacts: list[CodeArtifactResponse] = []
+
+
 class TaskResponse(BaseModel):
     id: uuid.UUID
     project_id: uuid.UUID | None
@@ -51,7 +57,17 @@ class TaskResponse(BaseModel):
 
 
 class TaskDetail(TaskResponse):
-    steps: list[StepResponse] = []
+    steps: list[StepDetail] = []
+
+
+# ── Pagination ──
+
+
+class PaginatedTasks(BaseModel):
+    items: list[TaskResponse]
+    total: int
+    page: int
+    per_page: int
 
 
 # ── Project Schemas ──
@@ -72,6 +88,57 @@ class ProjectResponse(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+# ── Index Schemas ──
+
+
+class IndexRequest(BaseModel):
+    directory: str = Field(..., min_length=1, max_length=2048)
+    project_name: str = Field(..., min_length=1, max_length=255)
+    description: str | None = None
+
+
+class IndexResponse(BaseModel):
+    project_id: uuid.UUID
+    project_name: str
+    files_indexed: int
+    message: str
+
+
+# ── Search Schemas ──
+
+
+class SearchRequest(BaseModel):
+    query: str = Field(..., min_length=1, max_length=2000)
+    project_id: uuid.UUID | None = None
+    top_k: int = Field(default=10, ge=1, le=50)
+
+
+class SearchResultItem(BaseModel):
+    file_path: str
+    start_line: int
+    end_line: int
+    code_snippet: str
+    chunk_type: str
+    name: str
+    language: str
+    similarity_score: float
+
+
+class SearchResponse(BaseModel):
+    results: list[SearchResultItem]
+    total: int
+
+
+# ── WebSocket Schemas ──
+
+
+class WSMessage(BaseModel):
+    """WebSocket message sent to the client during task execution."""
+
+    event: str
+    data: dict = {}
 
 
 # ── Health ──
