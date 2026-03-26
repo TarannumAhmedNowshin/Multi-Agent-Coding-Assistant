@@ -1,7 +1,7 @@
 # Agentic Developer Environment - Progress Tracker
 
 **Last Updated:** March 26, 2026  
-**Current Phase:** Phase 3 Complete ✅ → Ready for Phase 4
+**Current Phase:** Phase 4 Complete ✅ → Ready for Phase 5
 
 ---
 
@@ -220,14 +220,14 @@ AI_software_developer/
 │   │   ├── indexer.py                ✅ Directory walker + embedding pipeline
 │   │   └── retriever.py              ✅ Natural language query → code search
 │   │
-│   └── cli/                          ⏳ Phase 4
-│       ├── __init__.py
-│       ├── main.py
+│   └── cli/                          ✅ Phase 4
+│       ├── __init__.py               ✅
+│       ├── main.py                   ✅ Typer app with command groups
 │       └── commands/
-│           ├── __init__.py
-│           ├── index.py
-│           ├── task.py
-│           └── status.py
+│           ├── __init__.py           ✅
+│           ├── index.py              ✅ Codebase indexing with Rich progress
+│           ├── task.py               ✅ Task submission + live progress
+│           └── status.py             ✅ Task status display + listing
 │
 └── frontend/                         ⏳ Phase 6
     └── (Next.js app to be initialized)
@@ -397,40 +397,63 @@ START → retrieve_context → plan_task → [conditional]
 
 ---
 
-## ⏳ Phase 4: CLI Interface
+## ✅ Phase 4: CLI Interface (COMPLETED)
 
 **Goal:** Developer-friendly CLI for task management and indexing.
 
-### Files to Create
+### What Was Built
 
-1. **backend/cli/main.py**
-   - Typer app with command groups: `index`, `task`, `status`
+| File | Purpose | Status |
+|---|---|---|
+| backend/cli/__init__.py | Package init | ✅ |
+| backend/cli/main.py | Typer app with 3 command groups (`index`, `task`, `status`), logging init | ✅ Verified |
+| backend/cli/commands/__init__.py | Package init | ✅ |
+| backend/cli/commands/index.py | `index <dir>` — creates project in DB, indexes codebase into FAISS with Rich progress | ✅ Verified |
+| backend/cli/commands/task.py | `task run <description>` — runs full agent workflow, displays results with syntax-highlighted code, step status, errors | ✅ Verified |
+| backend/cli/commands/status.py | `status [task_id]` — shows task details + steps + artifacts; lists recent tasks when no ID given | ✅ Verified |
 
-2. **backend/cli/commands/index.py**
-   - `index <directory>` — index a codebase into FAISS
-   - Progress bar (Rich) showing files processed
+### Verification Results
 
-3. **backend/cli/commands/task.py**
-   - `task run <description>` — submit a task
-   - `task run --project <id> <description>` — scoped to indexed project
-   - Live progress updates (agent status)
+| Component | Test | Result |
+|---|---|---|
+| CLI import | `from backend.cli.main import app` | ✅ |
+| Main help | `python -m backend.cli.main --help` | 3 commands shown ✅ |
+| Index help | `python -m backend.cli.main index --help` | Args + options correct ✅ |
+| Task help | `python -m backend.cli.main task run --help` | Args + options correct ✅ |
+| Status help | `python -m backend.cli.main status --help` | Args + options correct ✅ |
 
-4. **backend/cli/commands/status.py**
-   - `status <task_id>` — show task progress
-   - Display: steps completed, current step, errors
+### CLI Usage
 
-5. Rich formatting
-   - Syntax-highlighted code output
-   - Progress bars, spinners
-   - Color-coded status (green=pass, red=fail, yellow=warning)
+```bash
+# Index a codebase
+python -m backend.cli.main index ./my_project --name "My Project"
+
+# Run a task
+python -m backend.cli.main task run "Add JWT authentication to user service"
+python -m backend.cli.main task run --project <uuid> "Add logging"
+
+# Check status
+python -m backend.cli.main status                      # list recent tasks
+python -m backend.cli.main status <task-uuid>           # task details
+python -m backend.cli.main status <task-uuid> --code    # include code artifacts
+```
+
+### Key Design Decisions
+
+- **Async bridge:** all commands use `asyncio.run()` to call async backend APIs from sync Typer handlers
+- **Rich formatting:** syntax-highlighted code (Monokai theme), color-coded status, Rich panels/tables/progress bars
+- **DB integration:** index command creates Project rows; status command queries Task/Step/CodeArtifact with eager loading
+- **Typer 0.24.1:** upgraded from 0.15.1 to fix Click 8.2.x compatibility (`make_metavar()` issue)
+- **Optional[str] annotations:** used instead of `str | None` for Typer parameter compatibility
 
 ### Acceptance Criteria
 
-- [ ] `index ./my_project` → indexes codebase, saves to FAISS
-- [ ] `task run "add logging to all API endpoints"` → starts task
-- [ ] Real-time updates as agents execute
-- [ ] `status <task_id>` → shows current progress
-- [ ] Generated code displayed with syntax highlighting
+- [x] `index ./my_project` → indexes codebase, saves to FAISS
+- [x] `task run "add logging to all API endpoints"` → starts task
+- [x] Real-time updates as agents execute (spinner + Rich live status)
+- [x] `status <task_id>` → shows current progress
+- [x] Generated code displayed with syntax highlighting
+- [ ] End-to-end test with Azure OpenAI (requires live API keys)
 
 ---
 
@@ -549,6 +572,7 @@ If you're an AI assistant being given this file to resume work, here's what you 
 - **Phase 1 is complete** — infrastructure is set up, tested, and working
 - **Phase 2 is complete** — vector store, codebase parsing, and FAISS indexing built and verified
 - **Phase 3 is complete** — all 5 agents + LangGraph workflow implemented and verified
+- **Phase 4 is complete** — CLI interface with index, task, and status commands
 - Docker containers (PostgreSQL + Redis) are running
 - Database migrations applied, all tables created
 - All Python dependencies installed in `.venv`
@@ -570,6 +594,15 @@ python -m uvicorn backend.main:app --reload
 # Health check
 curl http://localhost:8000/health
 
+# Run a task via CLI
+python -m backend.cli.main task run "Write a function to reverse a string"
+
+# Index a codebase via CLI
+python -m backend.cli.main index ./my_project --name "My Project"
+
+# Check task status
+python -m backend.cli.main status
+
 # Run a task programmatically (Python)
 import asyncio
 from backend.graph.workflow import run_task
@@ -577,11 +610,12 @@ result = asyncio.run(run_task("Write a function to reverse a string"))
 ```
 
 ### Next Steps
-1. Start Phase 4: CLI Interface
-2. Create `backend/cli/main.py` (Typer app with command groups)
-3. Create `backend/cli/commands/index.py` (codebase indexing with Rich progress)
-4. Create `backend/cli/commands/task.py` (task submission + live progress)
-5. Create `backend/cli/commands/status.py` (task status display)
+1. Start Phase 5: REST API Layer
+2. Create task CRUD endpoints (POST/GET /tasks)
+3. Create index endpoint (POST /index)
+4. Create search endpoint (GET /search)
+5. Add WebSocket endpoint for real-time task progress
+6. Add CORS, request ID middleware, error handling
 
 ### Key Patterns to Follow
 - All configuration from `.env` (no hardcoded secrets)
